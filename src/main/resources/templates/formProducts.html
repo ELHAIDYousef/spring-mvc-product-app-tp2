@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add / Edit Product</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4" th:text="${product.id} != null ? 'Edit Product' : 'Add New Product'"></h2>
+
+    <form th:action="@{/save}" th:object="${product}" method="post">
+
+        <input type="hidden" th:field="*{id}">
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text"
+                   class="form-control"
+                   id="name"
+                   placeholder="Enter product name"
+                   th:field="*{name}">
+            <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="number"
+                   step="0.01"
+                   class="form-control"
+                   id="price"
+                   placeholder="Enter product price"
+                   th:field="*{price}">
+            <div class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="quantity" class="form-label">Quantity</label>
+            <input type="number"
+                   class="form-control"
+                   id="quantity"
+                   placeholder="Enter product quantity"
+                   th:field="*{quantity}">
+            <div class="text-danger" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-success">
+                <span th:text="${product.id} != null ? 'Update' : 'Add'"></span>
+            </button>
+            <a th:href="@{ / }" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

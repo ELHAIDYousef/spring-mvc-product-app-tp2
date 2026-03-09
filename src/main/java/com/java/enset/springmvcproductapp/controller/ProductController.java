@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -19,17 +20,49 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
-    @GetMapping("/index")
-    public String index(Model model) {
-        List<Product> products = productRepository.findAll();
-        model.addAttribute("products",products);
+    @GetMapping("/")
+    public String index(Model model,
+                        @RequestParam(name = "keyword", required = false) String keyword) {
+
+        List<Product> products;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            products = productRepository.findByNameContainingIgnoreCase(keyword);
+        } else {
+            products = productRepository.findAll();
+        }
+
+        model.addAttribute("products", products);
+        model.addAttribute("keyword", keyword); // To keep the search box filled
         return "index";
     }
     @GetMapping("/delete")
     public String deleteProduct(@RequestParam Long id) {
         productRepository.deleteById(id);
-        return "redirect:/index";
+        return "redirect:/";
     }
+
+    @GetMapping("/formProducts")
+    public String formProducts(Model model){
+        model.addAttribute("product", new Product());
+        return "formProducts";
+    }
+
+    @PostMapping("/save")
+    public String save(Product product){
+        productRepository.save(product);
+        return "redirect:/";
+    }
+
+    @GetMapping("/edit")
+    public String editProduct(@RequestParam Long id, Model model) {
+        Product product = productRepository.findById(id).orElse(null);
+        model.addAttribute("product", product);
+        return "formProducts";
+    }
+
+
+
 
 
 }
