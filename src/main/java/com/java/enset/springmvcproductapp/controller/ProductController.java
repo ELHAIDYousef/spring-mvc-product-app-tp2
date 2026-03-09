@@ -2,8 +2,10 @@ package com.java.enset.springmvcproductapp.controller;
 
 import com.java.enset.springmvcproductapp.entity.Product;
 import com.java.enset.springmvcproductapp.repository.ProductRepository;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +24,7 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/")
     public String index(Model model,
                         @RequestParam(name = "keyword", required = false) String keyword) {
@@ -38,18 +41,27 @@ public class ProductController {
         model.addAttribute("keyword", keyword); // To keep the search box filled
         return "index";
     }
+
+    @GetMapping("/index")
+    public String home(Model model) {
+        return "redirect:/";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/delete")
     public String deleteProduct(@RequestParam Long id) {
         productRepository.deleteById(id);
         return "redirect:/";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/formProducts")
     public String formProducts(Model model){
         model.addAttribute("product", new Product());
         return "formProducts";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
     public String save(@Valid Product product, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -59,6 +71,7 @@ public class ProductController {
         return "redirect:/formProducts";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/edit")
     public String editProduct(@RequestParam Long id, Model model) {
         Product product = productRepository.findById(id).orElse(null);
@@ -66,8 +79,20 @@ public class ProductController {
         return "formProducts";
     }
 
+    @GetMapping("/notAuthorized")
+    public String notAuthorized(){
+        return "notAuthorized";
+    }
 
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
 
-
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "login";
+    }
 
 }
