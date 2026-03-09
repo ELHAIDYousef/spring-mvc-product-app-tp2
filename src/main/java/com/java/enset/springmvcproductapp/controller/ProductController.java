@@ -2,9 +2,11 @@ package com.java.enset.springmvcproductapp.controller;
 
 import com.java.enset.springmvcproductapp.entity.Product;
 import com.java.enset.springmvcproductapp.repository.ProductRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,9 +51,12 @@ public class ProductController {
     }
 
     @PostMapping("/save")
-    public String save(Product product){
+    public String save(@Valid Product product, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "formProducts";
+        }
         productRepository.save(product);
-        return "redirect:/";
+        return "redirect:/formProducts";
     }
 
     @GetMapping("/edit")
