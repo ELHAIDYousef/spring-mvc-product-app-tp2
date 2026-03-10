@@ -5,6 +5,8 @@ import com.java.enset.springmvcproductapp.repository.ProductRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,18 +29,18 @@ public class ProductController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/")
     public String index(Model model,
-                        @RequestParam(name = "keyword", required = false) String keyword) {
+                        @RequestParam(name="page", defaultValue="0") int page,
+                        @RequestParam(name="size", defaultValue="5") int size,
+                        @RequestParam(name="keyword", defaultValue="") String keyword) {
 
-        List<Product> products;
+        Page<Product> pageProducts =
+                productRepository.findByNameContainingIgnoreCase(keyword, PageRequest.of(page, size));
 
-        if (keyword != null && !keyword.isEmpty()) {
-            products = productRepository.findByNameContainingIgnoreCase(keyword);
-        } else {
-            products = productRepository.findAll();
-        }
+        model.addAttribute("products", pageProducts.getContent());
+        model.addAttribute("pages", new int[pageProducts.getTotalPages()]);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("keyword", keyword);
 
-        model.addAttribute("products", products);
-        model.addAttribute("keyword", keyword); // To keep the search box filled
         return "index";
     }
 
