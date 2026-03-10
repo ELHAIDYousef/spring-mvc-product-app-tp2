@@ -33,6 +33,36 @@ public class SpringMvcProductAppApplication {
 					.price(1d)
 					.quantity(30)
 					.build());
+			productRepository.save(Product.builder()
+					.name("sadfwer")
+					.price(1d)
+					.quantity(30)
+					.build());
+			productRepository.save(Product.builder()
+					.name("ksdf")
+					.price(1d)
+					.quantity(30)
+					.build());
+			productRepository.save(Product.builder()
+					.name("jsdj")
+					.price(1d)
+					.quantity(30)
+					.build());
+			productRepository.save(Product.builder()
+					.name("sa3a")
+					.price(1d)
+					.quantity(30)
+					.build());
+			productRepository.save(Product.builder()
+					.name("hjy")
+					.price(1d)
+					.quantity(30)
+					.build());
+			productRepository.save(Product.builder()
+					.name("vbmn")
+					.price(1d)
+					.quantity(30)
+					.build());
 		};
 	}
 

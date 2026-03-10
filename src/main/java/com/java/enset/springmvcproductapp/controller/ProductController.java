@@ -68,7 +68,7 @@ public class ProductController {
             return "formProducts";
         }
         productRepository.save(product);
-        return "redirect:/formProducts";
+        return "redirect:/";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
