@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 
 /**
  * @author ELHAID Yousef
@@ -45,7 +44,7 @@ public class ProductController {
     }
 
     @GetMapping("/index")
-    public String home(Model model) {
+    public String home() {
         return "redirect:/";
     }
 
@@ -65,7 +64,7 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
-    public String save(@Valid Product product, BindingResult bindingResult, Model model) {
+    public String save(@Valid Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "formProducts";
         }
